@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      target: api_dev
+    env_file: ./api.env
+    container_name: buscapreco_api
+    ports:
+      - 6868:6868
+    depends_on:
+      - mysql
+    volumes:
+      - ../backend/src:/buscapreco_api/src
+    stdin_open: true
+    tty: true
+    networks:
+      - buscapreco
+    command: yarn start:dev
+
+  client:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      target: client_dev
+    container_name: buscapreco_client
+    ports:
+      - 3000:3000
+    volumes:
+      - ../frontend:/buscapreco_client
+      - /buscapreco_client/node_modules
+    networks:
+      - buscapreco
+    command: yarn start
+    
+  mysql:
+    image: mysql:8.0
+    ports:
+      - 7702:3306
+    cap_add:
+      - SYS_NICE
+    environment:
+      MYSQL_DATABASE: buscapreco
+      MYSQL_ROOT_PASSOWRD: root
+    volumes:
+      - ./mysql-dump/buscapreco.sql:/buscapreco.sql
+      - ./mysql-local-data:/var/lib/mysql
+    networks:
+      - buscapreco
+
+networks:
+ buscapreco:
