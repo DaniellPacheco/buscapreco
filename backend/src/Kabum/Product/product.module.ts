@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ProcutController } from './Controller/product.controller';
 import { ProductService } from './Service/product.service';
+import { BrowserModule } from '../../Browser/browser.module';
+import { BrowserService } from 'src/Browser/Service/browser.service';
 
 @Module({
-  imports: [],
+  imports: [BrowserModule],
   controllers: [ProcutController],
-  providers: [ProductService],
+  providers: [ProductService, BrowserService],
 })
 export class ProductModule {}

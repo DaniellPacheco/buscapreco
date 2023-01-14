@@ -1,6 +1,8 @@
-FROM node:14.17.3 as api_dev
+FROM node:19-alpine as api_dev
 
 WORKDIR /buscapreco_api
+
+RUN apk add chromium
 
 COPY package.json yarn.lock ./
 
