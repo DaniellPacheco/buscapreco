@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { BrowserService } from '../../../Browser/Service/browser.service';
 
 @Injectable()
 export class ProductService {
   public constructor(private readonly browserService: BrowserService) {}
 
+  @Cron('0 10 * * * *')
   public async findProductsWithPromotion(): Promise<any> {
     const products = await this.getProducts();
     console.log('penis gigante');
