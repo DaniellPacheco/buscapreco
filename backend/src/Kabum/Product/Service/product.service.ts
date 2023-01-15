@@ -18,18 +18,20 @@ export class ProductService {
       const content = await page.evaluate(() => {
         const $ = (window as any).$;
         return {
-          finalPrice: $('.finalPrice')[0]
+          cashValue: $('.finalPrice')[0]
             ?.innerText?.replace('R$', '')
             .trim()
             ?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-          regularPrice: $('.regularPrice')[0]
+          installmentValue: $('.regularPrice')[0]
             ?.innerText?.replace('R$', '')
             .trim()
             ?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-          oldPrice: $('.oldPrice')[0]
-            ?.innerText?.replace('R$', '')
-            .trim()
-            ?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+          promotion: $('#cardAlertaOferta').length ? true : false,
+          supplyAmount: $('#cardAlertaOferta')
+            ?.find('div:nth-child(2)')
+            ?.find('div:nth-child(3)')
+            ?.find('b')[0]
+            ?.innerText.replace(/[^\d]/g, ''),
         };
       });
       console.log(content);
@@ -47,5 +49,7 @@ export class ProductService {
       'https://www.kabum.com.br/produto/128562/placa-de-video-rtx-3090-trinity-zotac-nvidia-geforce-24gb-gddr6x-zt-a30900d-10p',
     ];
   }
-  public async registerProductPrice(): Promise<any> {}
+  public async registerProductPrice(): Promise<any> {
+    console.log('teste');
+  }
 }
