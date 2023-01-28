@@ -7,7 +7,31 @@ datasource db {
 }
 
 model Providers {
-  id Int @id @default(autoincrement())
-  name String
-  website String
+  id       Int        @id @default(autoincrement())
+  name     String
+  website  String     @unique
+  products Products[]
+}
+
+model Products {
+  id                  Int               @id @default(autoincrement())
+  providerId          Int
+  provider            Providers         @relation(fields: [providerId], references: [id])
+  endopoint           String
+  name                String
+  provider_product_id String
+  cash_value          Float
+  installment_value   Float
+  Product_history     Product_history[]
+}
+
+model Product_history {
+  id                  Int      @id @default(autoincrement())
+  productId           Int
+  product             Products @relation(fields: [productId], references: [id])
+  endopoint           String
+  name                String
+  provider_product_id String
+  cash_value          Float
+  installment_value   Float
 }
