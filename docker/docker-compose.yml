@@ -43,7 +43,9 @@ services:
     depends_on:
       - mysql
     volumes:
-      - ../backend/src:/buscapreco_api/src
+      - type: volume
+        source: backend
+        target: /buscapreco_api/src
     stdin_open: true
     tty: true
     networks:
@@ -53,3 +55,11 @@ services:
 
 networks:
  buscapreco:
+
+volumes:
+  backend:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ../backend/src
