@@ -9,7 +9,6 @@ export class ProductService {
   @Cron('0 10 * * * *')
   public async findProductsWithPromotion(): Promise<any> {
     const products = await this.getProducts();
-    console.log('penis gigante');
     const { browser, page } = await this.browserService.launch();
 
     for (const product of products) {

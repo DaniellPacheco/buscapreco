@@ -10,6 +10,8 @@ RUN yarn install
 
 COPY . .
 
+RUN yarn prisma generate
+
 EXPOSE 6868
 
 FROM api_dev as production

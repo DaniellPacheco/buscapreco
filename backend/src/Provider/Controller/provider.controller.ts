@@ -12,8 +12,8 @@ export class ProviderController {
     @Res() response: Response,
   ): Promise<Response<any, Record<string, any>>> {
     const { name, website } = request.body;
-    this.providerService.save(name, website);
-    return response.status(200).end();
+    const result = await this.providerService.save(name, website);
+    return response.status(200).send(result).end();
   }
 
   @Get('/')
