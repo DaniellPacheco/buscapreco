@@ -19,21 +19,22 @@ model Providers {
 
 model Products {
   id                  Int               @id @default(autoincrement())
-  providerId          Int
-  provider            Providers         @relation(fields: [providerId], references: [id])
-  endopoint           String
+  provider_id         Int
+  provider            Providers         @relation(fields: [provider_id], references: [id])
+  endpoint            String
   name                String
   provider_product_id String
   cash_value          Float
   installment_value   Float
   Product_history     Product_history[]
+  @@unique([provider_id, provider_product_id])
 }
 
 model Product_history {
   id                  Int      @id @default(autoincrement())
-  productId           Int
-  product             Products @relation(fields: [productId], references: [id])
-  endopoint           String
+  product_id           Int
+  product             Products @relation(fields: [product_id], references: [id])
+  endpoint            String
   name                String
   provider_product_id String
   cash_value          Float

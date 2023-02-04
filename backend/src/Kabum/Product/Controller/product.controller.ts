@@ -11,7 +11,29 @@ export class ProductController {
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<Response<any, Record<string, any>>> {
-    const { productLink } = request.body;
+    const {
+      provider_id,
+      name,
+      endpoint,
+      provider_product_id,
+      cash_value,
+      installment_value,
+    } = request.body;
+    const result = await this.productService.createProduct(
+      provider_id,
+      name,
+      endpoint,
+      provider_product_id,
+      cash_value,
+      installment_value,
+    );
+
+    if (!result) {
+      return response
+        .status(400)
+        .send({ error: 'Produto Já cadastrado' })
+        .end();
+    }
     return response.status(200).end();
   }
 
@@ -20,7 +42,7 @@ export class ProductController {
     @Req() request: Request,
     @Res() response: Response,
   ): Promise<Response<any, Record<string, any>>> {
-    await this.productService.findProductsWithPromotion();
+    // await this.productService.generateProductHistory();
     return response.status(200).end();
   }
 }

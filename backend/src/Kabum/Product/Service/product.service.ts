@@ -1,13 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { BrowserService } from '../../../Browser/Service/browser.service';
+import { ProductRepository } from '../Repository/product.repository';
 
 @Injectable()
 export class ProductService {
-  public constructor(private readonly browserService: BrowserService) {}
+  public constructor(
+    private readonly browserService: BrowserService,
+    private readonly productRepository: ProductRepository,
+  ) {}
+
+  public async createProduct(
+    provider_id: number,
+    name: string,
+    endpoint: string,
+    provider_product_id: string,
+    cash_value: number,
+    installment_value: number,
+  ): Promise<any> {
+    const product = await this.productRepository.findProduct(
+      provider_id,
+      provider_product_id,
+    );
+
+    if (product) {
+      console.log(`Produto ${name} já cadastrado!`);
+      return;
+    }
+
+    await this.productRepository.save(
+      provider_id,
+      name,
+      endpoint,
+      provider_product_id,
+      cash_value,
+      installment_value,
+    );
+  }
 
   @Cron('0 10 * * * *')
-  public async findProductsWithPromotion(): Promise<any> {
+  public async generateProductHistory(): Promise<any> {
     const products = await this.getProducts();
     const { browser, page } = await this.browserService.launch();
 
@@ -17,11 +49,11 @@ export class ProductService {
       const content = await page.evaluate(() => {
         const $ = (window as any).$;
         return {
-          cashValue: $('.finalPrice')[0]
+          cash_value: $('.finalPrice')[0]
             ?.innerText?.replace('R$', '')
             .trim()
             ?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
-          installmentValue: $('.regularPrice')[0]
+          installment_value: $('.regularPrice')[0]
             ?.innerText?.replace('R$', '')
             .trim()
             ?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),

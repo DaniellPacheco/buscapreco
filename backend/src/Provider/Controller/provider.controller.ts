@@ -13,6 +13,9 @@ export class ProviderController {
   ): Promise<Response<any, Record<string, any>>> {
     const { name, website } = request.body;
     const result = await this.providerService.save(name, website);
+    if (!result) {
+      return response.status(400).send(result).end();
+    }
     return response.status(200).send(result).end();
   }
 
